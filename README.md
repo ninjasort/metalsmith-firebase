@@ -4,7 +4,9 @@
 
 ## Installation
 
-> $ npm install metalsmith-firebase
+```
+$ npm install metalsmith-firebase
+```
 
 ## CLI Usage
 
