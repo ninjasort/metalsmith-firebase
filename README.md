@@ -50,6 +50,8 @@ firebase: ref/namespace
 ---
 ```
 
+Access the data on the `firebase_data` object within the template file.
+
 
 ## License
 
