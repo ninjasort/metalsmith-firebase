@@ -8,7 +8,9 @@
 $ npm install metalsmith-firebase
 ```
 
-## CLI Usage
+## Usage
+
+#### CLI
 
 Add `metalsmith-firebase` to your `metalsmith.json` plugins and specify your firebase options:
 
@@ -22,7 +24,7 @@ Add `metalsmith-firebase` to your `metalsmith.json` plugins and specify your fir
 }
 ```
 
-## Javascript Usage
+#### JS
 
 Pass `options` to the firebase plugin and pass it to Metalsmith with the `use` method:
 
@@ -33,6 +35,21 @@ metalsmith.use(firebase({
   url: 'https://myfirebase.firebaseio.com'
 }));
 ```
+
+#### Front-matter
+
+```md
+---
+firebase: ref
+---
+```
+or
+```
+---
+firebase: ref/namespace
+---
+```
+
 
 ## License
 
