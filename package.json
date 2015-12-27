@@ -9,17 +9,20 @@
     ]
   },
   "scripts": {
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha --compilers js:babel-register",
+    "test-watch": "mocha --compilers js:babel-register -w"
   },
   "author": "Cameron J Roe <cameronjroe@gmail.com> (http://cameronjroe.com/)",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "chai": "^3.4.1",
-    "metalsmith": "^2.1.0"
+    "metalsmith": "^2.1.0",
+    "nock": "^3.6.0"
   },
   "dependencies": {
     "axios": "^0.8.1",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "q": "^1.4.1"
   }
 }
