@@ -14,11 +14,10 @@ exports.default = function (options) {
       var file = files[filename];
       var dfd = _q2.default.defer();
 
-      // make a promise
-      promises.push(dfd.promise);
-
       // set the firebase url for this file
       if (file.firebase) {
+        // make a promise
+        promises.push(dfd.promise);
         file.firebase_url = setFirebaseUrl(options.url, file.firebase);
       }
 
