@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import nock from 'nock';
-import firebase from '../lib';
+import firebase, {fetchJson} from '../lib';
 import Metalsmith from 'metalsmith';
 
 describe("metalsmith-firebase", () => {
@@ -16,6 +16,16 @@ describe("metalsmith-firebase", () => {
       .get('/some/namespace/.json').reply(200, {
         title: 'Some Namespace'
       });
+    nock('https://test.firebaseio.com')
+      .get('/.json')
+      .reply(200, {
+        title: 'Giant Self'
+      });
+    nock('https://test.firebaseio.com')
+      .get('/.json')
+      .reply(200, {
+        title: 'Giant Self'
+      });
 
     m = Metalsmith('test/fixtures')
         .use(firebase({
@@ -23,7 +33,23 @@ describe("metalsmith-firebase", () => {
         }));
   });
 
-  it("should have a firebase object attached", (done) => {
+  it('should fetch correct url with a slash at end', (done) => {
+    fetchJson('https://test.firebaseio.com/')
+      .then(res => {
+        nock.isDone();
+        done();
+      });
+  });
+
+  it('should fetch correct url without slash at end', (done) => {
+    fetchJson('https://test.firebaseio.com')
+      .then(res => {
+        nock.isDone();
+        done();
+      })
+  });
+
+  xit("should have a firebase object attached", (done) => {
     m.build((err, files) => {
       Object.keys(files).map((file) => {
         let meta = files[file];
@@ -33,7 +59,7 @@ describe("metalsmith-firebase", () => {
     });
   });
   
-  it("should build the correct ref url", (done) => {
+  xit("should build the correct ref url", (done) => {
     m.build((err, files) => {
       Object.keys(files).map((file) => {
         var ref;
@@ -49,12 +75,11 @@ describe("metalsmith-firebase", () => {
     })
   });
 
-  it("should load json data into file", (done) => {
+  it("should load firebase data on to global object", (done) => {
     m.build((err, files) => {
-      Object.keys(files).map((file) => {
-        let meta = files[file];
-        expect(meta.firebase_data).to.be.a('object');
-      });
+      let meta = m.metadata();
+      expect(meta.firebase).to.be.an('object');
+      nock.isDone();
       done();
     });
   });
