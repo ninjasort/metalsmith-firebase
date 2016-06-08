@@ -8,24 +8,26 @@ describe("metalsmith-firebase", () => {
   var m, data;
 
   beforeEach(() => {
+    
     nock('https://test.firebaseio.com')
-      .get('/home/.json').reply(200, {
-        title: 'Home Page'
+      .get('/.json').reply(200, {
+        title: 'Giant Self'
       });
+
     nock('https://test.firebaseio.com')
-      .get('/some/namespace/.json').reply(200, {
-        title: 'Some Namespace'
+      .get('/.json').reply(200, {
+        title: 'Giant Self'
       });
+
     nock('https://test.firebaseio.com')
       .get('/.json')
       .reply(200, {
         title: 'Giant Self'
       });
+
     nock('https://test.firebaseio.com')
       .get('/.json')
-      .reply(200, {
-        title: 'Giant Self'
-      });
+      .reply(404);
 
     m = Metalsmith('test/fixtures')
         .use(firebase({
@@ -49,37 +51,20 @@ describe("metalsmith-firebase", () => {
       })
   });
 
-  xit("should have a firebase object attached", (done) => {
-    m.build((err, files) => {
-      Object.keys(files).map((file) => {
-        let meta = files[file];
-        expect(meta.firebase).to.be.ok;
-      });
-      done();
-    });
-  });
-  
-  xit("should build the correct ref url", (done) => {
-    m.build((err, files) => {
-      Object.keys(files).map((file) => {
-        var ref;
-        let meta = files[file];
-        if (Array.isArray(meta.firebase)) {
-          ref = meta.firebase.join('/');
-        } else {
-          ref = meta.firebase;
-        }
-        expect(meta.firebase_url).to.equal('https://test.firebaseio.com/' + ref);
-      });
-      done();
-    })
-  });
-
-  it("should load firebase data on to global object", (done) => {
+  it("should load firebase data onto global object", (done) => {
     m.build((err, files) => {
       let meta = m.metadata();
       expect(meta.firebase).to.be.an('object');
       nock.isDone();
+      done();
+    });
+  });
+
+  it("should set firebase to null on a failed request", (done) => {
+    m.build((err, files) => {
+      let meta = m.metadata();
+      expect(meta.firebase).to.be.a('null');
+      expect(nock.isDone()).to.be.false;
       done();
     });
   });
