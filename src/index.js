@@ -22,6 +22,10 @@ export default function (options) {
   }
 }
 
+export function transform () {
+  
+}
+
 // old
 // Object.keys(files).forEach((filename) => {
 //   var file = files[filename];
