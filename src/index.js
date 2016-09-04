@@ -3,7 +3,6 @@ import _ from 'lodash';
 import q from 'q';
 
 export default function (options) {
-
   return function (files, metalsmith, done) {
 
     let url = options.url;
@@ -22,8 +21,59 @@ export default function (options) {
   }
 }
 
-export function transform () {
-  
+export function transform(options) {
+  return function (files, m, next) {
+    if (!m.metadata().firebase) {
+      throw new Error('Firebase was not loaded first.');
+      return;
+    }
+    if (!options.options.collections) {
+      throw new Error('Did not specify "options.collections" array in Firebase options. (ex. {"collections": ["posts", "pages"]}');
+      return;
+    }
+
+    // console.log(m.metadata().firebase);
+
+    // we need a way to map over all the data in firebase such as posts, pages, assets, etc.
+    // and write them in here so what we need to do is map a structure to firebase. We can pass this into the plugin.
+    // {
+    //   url: '',
+    //   collections: [
+    //     "posts",
+    //     "pages"
+    //   ]
+    // }
+    
+    // A NOTE ON COLLECTIONS.
+    // ----------------------
+    // We can allow for clients to create new collections, however they will not be able to create any size collection they want.
+    // We will need to make sure these collections are limited to what characters are used, how big, etc. 
+    // We can do this with some basic regexing. Let's get a list in Todoist around regexing and master it. We can include some regex
+    // videos from harddrive.
+
+    function updateCollectionData(files, name) {
+      if (m.metadata().firebase[name]) { // loop over all the collections
+        var data = m.metadata().firebase[name];
+        for (var item in data) {
+          var entry = data[item]; // get each entry
+          if (entry.contents) { // if it has contents
+            entry.contents = Buffer.from(entry.contents, 'utf8'); // create a buffer version
+          } else {
+            entry.contents = Buffer.from('', 'utf8');
+            console.log(entry.contents, 'contents property not found');
+          }
+          files[entry._key] = _.omit(entry, ['_key']); // set their _key as file path and remove it from object
+        }
+      }
+    }
+
+    options.options.collections.map((collection) => {
+      updateCollectionData(files, collection);
+    });
+
+    next();
+
+  }
 }
 
 // old

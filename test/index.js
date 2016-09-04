@@ -1,6 +1,9 @@
 import {expect} from 'chai';
 import nock from 'nock';
-import firebase, {fetchJson} from '../lib';
+import firebase, {
+  fetchJson,
+  transform
+} from '../src';
 import Metalsmith from 'metalsmith';
 
 describe("metalsmith-firebase", () => {
@@ -31,7 +34,13 @@ describe("metalsmith-firebase", () => {
 
     m = Metalsmith('test/fixtures')
         .use(firebase({
-          url: 'https://test.firebaseio.com'
+          url: 'https://test.firebaseio.com',
+          options: {
+            collections: [
+              "posts",
+              "pages"
+            ]
+          }
         }));
   });
 
@@ -68,5 +77,71 @@ describe("metalsmith-firebase", () => {
       done();
     });
   });
+  
+  after(() => {
+    nock.cleanAll();
+  })
 
 });
+
+
+describe('transform', () => {
+  
+  let m;
+  let options = {
+    url: 'https://test.firebaseio.com',
+    options: {
+      collections: [
+        "posts",
+        "pages"
+      ]
+    }
+  };
+  
+  beforeEach(() => {
+    
+    nock('https://test.firebaseio.com')
+      .get('/.json')
+      .reply(200, {
+        'posts': {
+          '001': {
+            _key: 'pages/page-1.md',
+            title: 'Page 1',
+            contents: 'Page 1 Contents'
+          }
+        }
+      });
+
+    m = Metalsmith('test/fixtures')
+        .use(firebase(options));
+
+  });
+
+  it('should set an object on the right key', (done) => {
+    m.use(transform(options))
+    m.build((err, files) => {
+      expect(files['pages/page-1.md']).to.be.a('object');
+      expect(nock.isDone()).to.be.true;
+      done();
+    });
+  });
+  
+  it('should set an object on the right key', (done) => {
+    m.use(transform(options))
+    m.build((err, files) => {
+      var page = files['pages/page-1.md'];
+      var contents = page.contents.toString();
+      expect(page.title).to.equal('Page 1');
+      expect(contents).to.equal('Page 1 Contents');
+      expect(nock.isDone()).to.be.true;
+      done();
+    });
+  });
+
+
+  afterEach(() => {
+    m = null;
+    nock.cleanAll();
+  })
+
+})
