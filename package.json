@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-firebase",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Load firebase data into metalsmith.",
   "main": "dist/index.js",
   "babel": {
