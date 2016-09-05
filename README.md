@@ -18,7 +18,13 @@ Add `metalsmith-firebase` to your `metalsmith.json` plugins and specify your fir
 {
   "plugins": {
     "metalsmith-firebase": {
-      "url": "https://myfirebase.firebaseio.com"
+      "url": "https://myfirebase.firebaseio.com",
+      "options": {
+        "collections": [
+          "pages",
+          "posts"
+        ]
+      }
     }
   }
 }
@@ -32,27 +38,21 @@ Pass `options` to the firebase plugin and pass it to Metalsmith with the `use` m
 import firebase from 'metalsmith-firebase';
 
 metalsmith.use(firebase({
-  url: 'https://myfirebase.firebaseio.com'
+  url: 'https://myfirebase.firebaseio.com',
+  options: {
+    collections: [
+      "pages",
+      "posts"
+    ]
+  }
 }));
 ```
 
-#### Front-matter
+You can specify options to merge data into files. By including "collections", you can specify the references that will be used to create pages from a `_key` property. For example, if I have `_key: posts/2016-09-05-metalsmith-firebase`, a file will be created with that `_key`, the property will be removed, and all the data will be assigned to that object, including contents which will be transformed to a buffer for other metalsmith plugins.
 
-```md
----
-firebase: ref
----
-```
-or
-```
----
-firebase: ref/namespace
----
-```
-
-Access the data on the `firebase_data` object within the template file.
+Access the data on the `firebase` object within the template file.
 
 
-## License
+## License 
 
-[MIT]()
+[MIT](/LICENSE)
