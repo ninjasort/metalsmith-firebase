@@ -23,6 +23,10 @@ export default function (options) {
 
 export function transform(options) {
   return function (files, m, next) {
+    if (!options) {
+      next();
+      return;
+    }
     if (!m.metadata().firebase) {
       throw new Error('Firebase was not loaded first.');
       return;

@@ -125,7 +125,15 @@ describe('transform', () => {
       done();
     });
   });
-  
+
+  it('should throw if still work if no options are passed', (done) => {
+    m.use(transform());
+    m.build((err, files) => {
+      expect(err).to.be.null;
+      done();
+    });
+  });
+
   it('should set an object on the right key', (done) => {
     m.use(transform(options))
     m.build((err, files) => {
