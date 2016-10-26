@@ -23,7 +23,7 @@ export default function (options) {
 
 export function transform(options) {
   return function (files, m, next) {
-    if (!options) {
+    if (!options || !options.options) {
       next();
       return;
     }
