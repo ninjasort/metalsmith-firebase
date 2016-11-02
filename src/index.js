@@ -23,15 +23,15 @@ export default function (options) {
 
 export function transform(options) {
   return function (files, m, next) {
-    if (!options || !options.options) {
-      next();
+    if (!options) {
+      throw new Error('Did no specify firebase.options');
       return;
     }
     if (!m.metadata().firebase) {
       throw new Error('Firebase was not loaded first.');
       return;
     }
-    if (!options.options.collections) {
+    if (!options.collections) {
       throw new Error('Did not specify "options.collections" array in Firebase options. (ex. {"collections": ["posts", "pages"]}');
       return;
     }
@@ -71,7 +71,7 @@ export function transform(options) {
       }
     }
 
-    options.options.collections.map((collection) => {
+    options.collections.map((collection) => {
       updateCollectionData(files, collection);
     });
 

@@ -88,7 +88,7 @@ describe("metalsmith-firebase", () => {
 describe('transform', () => {
   
   let m;
-  let options = {
+  let firebaseSettings = {
     url: 'https://test.firebaseio.com',
     options: {
       collections: [
@@ -113,12 +113,12 @@ describe('transform', () => {
       });
 
     m = Metalsmith('test/fixtures')
-        .use(firebase(options));
+        .use(firebase(firebaseSettings));
 
   });
 
   it('should set an object on the right key', (done) => {
-    m.use(transform(options))
+    m.use(transform(firebaseSettings.options))
     m.build((err, files) => {
       expect(files['pages/page-1.md']).to.be.a('object');
       expect(nock.isDone()).to.be.true;
@@ -126,16 +126,15 @@ describe('transform', () => {
     });
   });
 
-  it('should throw if still work if no options are passed', (done) => {
+  it('should throw if no options are passed', (done) => {
     m.use(transform());
-    m.build((err, files) => {
-      expect(err).to.be.null;
-      done();
-    });
+    const cb = (err, files) => { done() };
+    m.build(cb);
+    expect(cb).to.throw(Error);
   });
 
   it('should set an object on the right key', (done) => {
-    m.use(transform(options))
+    m.use(transform(firebaseSettings.options))
     m.build((err, files) => {
       var page = files['pages/page-1.md'];
       var contents = page.contents.toString();
@@ -145,7 +144,6 @@ describe('transform', () => {
       done();
     });
   });
-
 
   afterEach(() => {
     m = null;
