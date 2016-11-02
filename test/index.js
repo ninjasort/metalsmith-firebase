@@ -120,7 +120,11 @@ describe('transform', () => {
   it('should set an object on the right key', (done) => {
     m.use(transform(firebaseSettings.options))
     m.build((err, files) => {
-      expect(files['pages/page-1.md']).to.be.a('object');
+      var page = files['pages/page-1.md'];
+      var contents = page.contents.toString();
+      expect(page).to.be.a('object');
+      expect(page.title).to.equal('Page 1');
+      expect(contents).to.equal('Page 1 Contents');
       expect(nock.isDone()).to.be.true;
       done();
     });
@@ -131,18 +135,6 @@ describe('transform', () => {
     const cb = (err, files) => { done() };
     m.build(cb);
     expect(cb).to.throw(Error);
-  });
-
-  it('should set an object on the right key', (done) => {
-    m.use(transform(firebaseSettings.options))
-    m.build((err, files) => {
-      var page = files['pages/page-1.md'];
-      var contents = page.contents.toString();
-      expect(page.title).to.equal('Page 1');
-      expect(contents).to.equal('Page 1 Contents');
-      expect(nock.isDone()).to.be.true;
-      done();
-    });
   });
 
   afterEach(() => {
