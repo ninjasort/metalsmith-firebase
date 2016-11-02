@@ -1,4 +1,4 @@
-# metalsmith-firebase
+# metalsmith-firebase [![npm](https://img.shields.io/npm/v/metalsmith-firebase.svg?maxAge=2592000?style=flat-square)](https://www.npmjs.com/package/metalsmith-firebase) [![Travis](https://img.shields.io/travis/axisdefined/metalsmith-firebase.svg?maxAge=2592000?style=flat-square)](https://travis-ci.org/cameronroe/metalsmith-firebase) [![Codecov](https://img.shields.io/codecov/c/github/cameronroe/metalsmith-firebase.svg?maxAge=2592000?style=flat-square)](https://codecov.io/gh/cameronroe/metalsmith-firebase) 
 
 > Load firebase data into metalsmith.
 
