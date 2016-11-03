@@ -64,7 +64,6 @@ export function transform(options) {
             entry.contents = Buffer.from(entry.contents, 'utf8'); // create a buffer version
           } else {
             entry.contents = Buffer.from('', 'utf8');
-            console.log(entry.contents, 'contents property not found');
           }
           files[entry._key] = _.omit(entry, ['_key']); // set their _key as file path and remove it from object
         }
